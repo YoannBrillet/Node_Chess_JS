@@ -1,0 +1,8 @@
+{
+    "name": "Node_Chess_JS",
+    "version": "1.0.0",
+    "keywords": ["util", "functional", "server", "client", "browser"],
+    "author": "Yoann",
+    "contributors": [],
+    "dependencies": {}
+}
