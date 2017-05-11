@@ -11,6 +11,8 @@
   "author": "Yoann",
   "contributors": [],
   "dependencies": {
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
     "socket.io": "^2.0.1"
   }
 }
