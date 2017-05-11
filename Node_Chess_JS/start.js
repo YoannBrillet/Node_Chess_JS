@@ -1,7 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const SocketServer = require('socket.io');
-var clients = [];
+var joueurs = [];
 
 const httpServer = http.createServer((request, response) => {
     console.log('REQUEST');
@@ -13,8 +13,8 @@ const httpServer = http.createServer((request, response) => {
 const io = new SocketServer(httpServer);
 io.on('connection', (socket) => {
     console.log('SOCKET CONNECTION : ' + socket.id);
-    clients.push(socket);
-    socket.on('message', (data) =>{
+    joueurs.push(socket);
+    socket.on('pseudo', (data) =>{
         console.log('MESSAGE RECEIVED : ' + data.text + ' FROM ' + socket.id);
 
         setTimeout(() => {
@@ -24,9 +24,9 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', (data) => {
-        for (var i in clients) {
-            if (clients[i].id == socket.id){
-                clients.splice(i, 1);
+        for (var i in joueurs) {
+            if (joueurs[i].id == socket.id){
+                joueurs.splice(i, 1);
                 break;
             }
         }
