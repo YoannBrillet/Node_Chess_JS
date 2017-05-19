@@ -1,21 +1,23 @@
 const SocketServer = require('socket.io');
 var joueurs = [];
 const express = require('express');
-const http = require('http');
+//const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
 var app = express();
 
 
-var server = http.createServer();
+//var server = http.createServer();
 
 
-const httpServer = server.on('request', function(request, response) {
-  console.log('REQUEST');
-  //Recupération de l'url de la page pour connaître le lien direct.
-
-  const httpServer = app.use(express.static('public'));
+//const httpServer = server.on('request', function(request, response) {
+//console.log('REQUEST');
+//Recupération de l'url de la page pour connaître le lien direct.
+var nodeserver = app.get(function() {
+  app.use(express.static('public'));
+  app.use(express.directory(__dirname));
+  app.use(express.errorHandler());
   app.get('/', function(req, res) {
     res.send('Hello World!');
   });
@@ -23,7 +25,7 @@ const httpServer = server.on('request', function(request, response) {
 
 });
 
-const io = new SocketServer(httpServer);
+const io = new SocketServer(nodeserver);
 io.on('connection', (socket) => {
   console.log('SOCKET CONNECTION : ' + socket.id);
   joueurs.push(socket);
@@ -52,7 +54,7 @@ io.on('connection', (socket) => {
 app.listen(3000, function() {
   console.log('Example app listening on port 3000!');
 });
-httpServer.listen(3001);
+//httpServer.listen(3001);
 
 
 console.log('HTTP SERVER STARTED');
