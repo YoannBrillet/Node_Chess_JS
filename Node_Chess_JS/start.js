@@ -1,10 +1,13 @@
 const SocketServer = require('socket.io');
 var joueurs = [];
+const errorHandler = require('express-error-handler');
 const express = require('express');
 //const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const https = require('https');
+
 var app = express();
 
 
@@ -14,16 +17,17 @@ var app = express();
 //const httpServer = server.on('request', function(request, response) {
 //console.log('REQUEST');
 //Recupération de l'url de la page pour connaître le lien direct.
-var nodeserver = app.get(function() {
-  app.use(express.static('public'));
-  app.use(express.directory(__dirname));
-  app.use(express.errorHandler());
-  app.get('/', function(req, res) {
-    res.send('Hello World!');
-  });
-  console.log("");
 
+
+
+
+app.use(express.static(__dirname + '/../public'));
+app.use(express.errorHandler());
+app.get('/', function(req, res) {
+  res.send('Hello World!');
 });
+console.log("");
+
 
 const io = new SocketServer(nodeserver);
 io.on('connection', (socket) => {
