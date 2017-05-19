@@ -11,36 +11,7 @@
     <link rel="stylesheet" href="./css/bootstrap.css" />
     <link rel="stylesheet" href="./css/style.css" />
     <link rel="stylesheet" href="./css/style_game.css" />
-    <style>
-      p {
-        color: rgb(0, 0, 0);
-        font-family: Times New Roman;
-      }
 
-      h1 {
-        color: rgb(128, 64, 0);
-        font-size: 12pt;
-        font-family: Times New Roman;
-      }
-
-      h2 {
-        color: rgb(191, 96, 0);
-        font-size: 12pt;
-        font-family: Times New Roman;
-      }
-
-      p.namo-list {
-        color: rgb(64, 0, 0);
-        font-size: 12pt;
-        font-family: Times New Roman;
-      }
-
-      p.namo-sublist {
-        color: rgb(145, 102, 23);
-        font-size: 10pt;
-        font-family: Times New Roman;
-      }
-    </style>
   </head>
 
   <body bgcolor="#FFF1D2" background="nth_brown_bg.gif" text="black" link="red" vlink="gray" alink="#DB9657">
@@ -306,7 +277,7 @@
               (legal_move(to, coord(to.x - 2, to.y - 2))) ||
               (legal_move(to, coord(to.x - 2, to.y + 2)))) {
               double_jump = true;
-              message("Vous devez terminer votre double saut ou cliquer sur votre pi�ce pour laisser votre pion � l'endroit auquel il se trouve.");
+              message("Vous devez terminer votre double saut ou cliquer sur votre pièce pour laisser votre pion à l'endroit auquel il se trouve.");
             }
           }
           if ((board[to.x][to.y] == 1) && (to.y == 7)) king_me(to.x, to.y);
@@ -362,7 +333,7 @@
         setTimeout("bak=my_turn;my_turn=false;toggle(" + to.x + "," + to.y + ");my_turn=bak;", 1000);
         if (game_over()) {
           setTimeout("comp_move = false;my_turn = true;togglers=0;", 600);
-          message("Ok. C'est votre tour. Vous devez effectuer un d�placement.");
+          message("Ok. C'est votre tour. Vous devez effectuer un déplacement.");
         }
         return true;
       }
