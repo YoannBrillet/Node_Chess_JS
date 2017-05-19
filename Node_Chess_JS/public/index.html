@@ -10,6 +10,7 @@
     <link href="data:," rel="icon" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
     <script type="text/javascript">
+        
       var socket = io('http://localhost:3000');
 
       function GetPseudo() {
@@ -22,7 +23,7 @@
         alert(data.text);
       });
     </script>
-
+    <script src="../bdd.js"></script>
   </head>
 
   <body>
@@ -104,7 +105,7 @@
 
         // Ajoute un message dans la page
         function insereMessage(pseudo, message) {
-          $('#zone_chat').prepend('<p><strong>' + pseudo + '</strong> ' + message + '</p>');
+          $('#zone_chat').prepend('<p><strong>' + pseudo + ' : </strong> ' + message + '</p>');
         }
       </script>
     </body>
