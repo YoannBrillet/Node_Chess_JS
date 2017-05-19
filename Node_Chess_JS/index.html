@@ -1,6 +1,5 @@
-<<<<<<< HEAD
-<!DOCTYPE html>
-<html>
+<<<<<<< HEAD <!DOCTYPE html>
+  <html>
 
   <head>
     <title>Node Chess JS</title>
@@ -80,9 +79,9 @@
         var socket = io.connect('http://localhost:3000');
 
         // On demande le pseudo, on l'envoie au serveur et on l'affiche dans le titre
-        var pseudo = prompt('Quel est votre pseudo ?');
-        socket.emit('nouveau_client', pseudo);
-        document.title = pseudo + ' - ' + document.title;
+        //  var pseudo = prompt('Quel est votre pseudo ?');
+        //  socket.emit('nouveau_client', pseudo);
+        //  document.title = pseudo + ' - ' + document.title;
 
         // Quand on reçoit un message, on l'insère dans la page
         socket.on('message', function(data) {
@@ -110,14 +109,14 @@
       </script>
     </body>
 
-</html>
+  </html>
 
-</body>
+  </body>
 
-</html>
-=======
-<!DOCTYPE html>
-<html>
+  </html>
+  =======
+  <!DOCTYPE html>
+  <html>
 
   <head>
     <title>Node Chess JS</title>
@@ -228,9 +227,9 @@
       </script>
     </body>
 
-</html>
+  </html>
 
-</body>
+  </body>
 
-</html>
->>>>>>> origin/master
+  </html>
+  >>>>>>> origin/master
