@@ -1,10 +1,11 @@
 const SocketServer = require('socket.io');
 var joueurs = [];
+const express = require('express');
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
-const FILENAME = __dirname;
+var app = express();
 
 
 var server = http.createServer();
@@ -13,58 +14,11 @@ var server = http.createServer();
 const httpServer = server.on('request', function(request, response) {
   console.log('REQUEST');
   //Recupération de l'url de la page pour connaître le lien direct.
-  var page = url.parse(request.url)
-    .pathname;
 
-  console.log(page);
-
-  //On récupére l'extention si elle existe
-  var ext = path.extname(page);
-
-  //si il n'y a pas d'extantion et que le nom de la page et / on affiche index.html et sinon on rajoute .html au nom de la page et si elle existe on l'affiche sinon on affiche la page d'erreur
-  if (ext == "") {
-    if (page == "/") {
-      page = "/index.html";
-      console.log(page);
-      var lien = fs.createReadStream(FILENAME + page);
-      lien.pipe(response);
-    } else {
-      page = page + ".html";
-      console.log(page);
-      var test = fs.existsSync(FILENAME + page);
-      console.log("Existe : " + test);
-      if (test == true) {
-        var lien = fs.createReadStream(FILENAME + page);
-        lien.pipe(response);
-      } else {
-        var lien = fs.createReadStream("./pages/erreur404.html");
-        lien.pipe(response);
-      }
-    }
-
-  }
-  //Si l'extention et egale à .html alors on affiche la page si elle existe au cas contraire on affiche la page d'erreur
-  else if (ext == ".html") {
-    var test = fs.existsSync(FILENAME + page);
-    console.log("Existe : " + test);
-    if (test == true) {
-      var lien = fs.createReadStream(FILENAME + page);
-      lien.pipe(response);
-    } else {
-      var lien = fs.createReadStream("./pages/erreur404.html");
-      lien.pipe(response);
-    }
-  }
-  //On test si c'est une image et on l'affiche
-  else if (ext == ".jpg" || ext == ".png" || ext == ".gif") {
-    var lien = fs.createReadStream(FILENAME + page);
-    lien.pipe(response);
-  } else {
-    console.log("erreur");
-    var lien = fs.createReadStream("./pages/erreur404.html");
-    lien.pipe(response);
-  }
-
+  const httpServer = app.use(express.static('public'));
+  app.get('/', function(req, res) {
+    res.send('Hello World!');
+  });
   console.log("");
 
 });
@@ -92,9 +46,13 @@ io.on('connection', (socket) => {
       }
     }
   })
-  1
+
 });
 
-httpServer.listen(3000);
+app.listen(3000, function() {
+  console.log('Example app listening on port 3000!');
+});
+httpServer.listen(3001);
+
 
 console.log('HTTP SERVER STARTED');
