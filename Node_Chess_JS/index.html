@@ -59,6 +59,7 @@
     </div>
 
     <body>
+      <button type="button" href=""></button>
       <h1>Le super Chat temps réel !</h1>
 
       <form action="/" method="post" id="formulaire_chat">
@@ -75,7 +76,7 @@
       <script src="/socket.io/socket.io.js"></script>
       <script>
         // Connexion à socket.io
-        var socket = io.connect('http://localhost:8080');
+        var socket = io.connect('http://localhost:3000');
 
         // On demande le pseudo, on l'envoie au serveur et on l'affiche dans le titre
         var pseudo = prompt('Quel est votre pseudo ?');
