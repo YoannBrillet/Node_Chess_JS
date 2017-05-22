@@ -1,62 +1,67 @@
-const SocketServer = require('socket.io');
-var joueurs = [];
 const express = require('express');
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-const url = require('url');
-var app = express();
-const FILENAME = __dirname;
+const ent = require('ent');
+
+/*** EXPRESS ***/
+const app = express();
+
+// middleware static pour renvoyer les fichiers statiques (css, js client, images etc...)
+app.use("/", express.static('public'));
+
+// UTILISER UN MIDDLEWARE POUR RECUPERER LES DONNEES D'UNE REQUETE POST DANS req.body.params
 
 
-var server = http.createServer();
+// configuration des routes
+//app.get('/', function(req, res) {
+//res.end('Hello World!');
+// res.render('NOM DU TEMPLATE');
+//});
+
+//app.post('/', function(req, res) {
+//  var login = req.body.params.login;
+//  var password = req.body.params.password
+//});
 
 
-const httpServer = server.on('request', function(request, response) {
-  console.log('REQUEST');
-  //Recupération de l'url de la page pour connaître le lien direct.
-  var page = url.parse(request.url)
-    .pathname;
+// Lancement server socket io
+const server = require('http')
+  .Server(app);
+const io = require('socket.io')(server);
 
-  console.log(page);
+io.on('connection', function(socket) {
 
-  app.use(express.static('public'));
-  app.get('/', function(req, res) {
-    res.send('Hello World!');
-  });
-  console.log("");
-
-});
-
-const io = new SocketServer(httpServer);
-io.on('connection', (socket) => {
-  console.log('SOCKET CONNECTION : ' + socket.id);
-  joueurs.push(socket);
-  socket.on('pseudo', (data) => {
-    console.log('MESSAGE RECEIVED : ' + data.text + ' FROM ' + socket.id);
-
-    setTimeout(() => {
-      socket.emit('reponse', {
-        text: 'Bien recu'
-      });
-    }, 2000)
-
-  });
-
-  socket.on('disconnect', (data) => {
-    for (var i in joueurs) {
-      if (joueurs[i].id == socket.id) {
-        joueurs.splice(i, 1);
-        break;
-      }
+  var UtilisateurConnecter;
+  // Dès qu'on nous donne un pseudo, on le stocke en variable de session et on informe les autres personnes
+  socket.on('disconnect', function() {
+    if (UtilisateurConnecter !== undefined) {
+      console.log('Utilisateur' + UtilisateurConnecter.username + 'est déconnecté');
+      var MessageChat = {
+        text: 'Utilisateur' + UtilisateurConnecter.username + "est déconnecter",
+        type: 'logout'
+      };
+      socket.broadcast.emit('Message du chat', MessageChat);
     }
-  })
+  });
 
+  socket.on('user-login', function(user) {
+    loggedUser = user;
+    if (loggedUser !== undefined) {
+      var serviceMessage = {
+        text: 'Utilisateur "' + loggedUser.username + '" est connecté',
+        type: 'login'
+      };
+      socket.broadcast.emit('service-message', serviceMessage);
+    }
+  });
+
+  // Dès qu'on reçoit un message, on récupère le pseudo de son auteur et on le transmet aux autres personnes
+  socket.on('message', function(message) {
+    message.username = UtilisateurConnecter.username;
+    io.emit('message', message);
+  });
+  console.log('SOCKET CONNECTION : ' + socket.id);
 });
 
-httpServer.listen(3001);
-app.listen(3000, function() {
-  console.log('Example app listening on port 3000!');
-});
 
-console.log('HTTP SERVER STARTED');
+// Lancement du serveur sur le port 3000
+server.listen(3000);
+console.log('serveur connecter. ecoute sur le port 3000');

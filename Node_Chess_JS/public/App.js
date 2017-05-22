@@ -1,32 +1,51 @@
-var app = require('express')(),
-  server = require('http')
-  .createServer(app),
-  io = require('socket.io')
-  .listen(server),
-  ent = require('ent'), // Permet de bloquer les caractères HTML (sécurité équivalente à htmlentities en PHP)
-  fs = require('fs');
+var socket = io.connect('http://localhost:3000');
 
-// Chargement de la page index.html
-app.get('/', function(req, res) {
-  res.sendfile(__dirname + '/index.html');
-});
-
-io.sockets.on('connection', function(socket, pseudo) {
-  // Dès qu'on nous donne un pseudo, on le stocke en variable de session et on informe les autres personnes
-  socket.on('nouveau_client', function(pseudo) {
-    pseudo = ent.encode(pseudo);
-    socket.pseudo = pseudo;
-    socket.broadcast.emit('nouveau_client', pseudo);
+// Connection de l'utilisateur
+$('#login form')
+  .submit(function(connecter) {
+    connecter.preventDefault();
+    var user = {
+      username: $('#login input')
+        .val()
+        .trim()
+    };
+    if (user.username.length > 0) { // vérification de la contenance
+      socket.emit('user-login', user);
+      $('body')
+        .removeAttr('id');
+      $('#chat input')
+        .focus();
+    }
   });
 
-  // Dès qu'on reçoit un message, on récupère le pseudo de son auteur et on le transmet aux autres personnes
-  socket.on('message', function(message) {
-    message = ent.encode(message);
-    socket.broadcast.emit('message', {
-      pseudo: socket.pseudo,
-      message: message
-    });
+// Envoi de messages
+$('#chat form')
+  .submit(function(connecter) {
+    connecter.preventDefault();
+    var message = {
+      text: $('#envoi')
+        .val()
+    };
+    $('#envoi')
+      .val('');
+    if (message.text.trim()
+      .length !== 0) { // Gestion message vide
+      socket.emit('chat-message', message);
+    }
+    $('#chat input')
+      .focus();
   });
+
+
+socket.on('chat-message', function(message) {
+  $('#messages')
+    .append($('<li>')
+      .html('<span >' + message.username + '</span> ' + message.text));
 });
 
-server.listen(8080);
+//message du chat
+socket.on('Message du Chat', function(message) {
+  $('#messages')
+    .append($('<li class="' + message.type + '">')
+      .html('<span >information</span> ' + message.text));
+});
